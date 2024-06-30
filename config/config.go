@@ -1,7 +1,11 @@
 package config
 
 import (
-	"github.com/spf13/viper"
+	"fmt"
+	"os"
+	"strconv"
+
+	"github.com/joho/godotenv"
 )
 
 type Config struct {
@@ -17,19 +21,27 @@ type Config struct {
 }
 
 func LoadConfig() (Config, error) {
-	var config Config
-
-	viper.AddConfigPath(".")
-	viper.SetConfigName(".env")
-	viper.SetConfigType("env")
-
-	viper.AutomaticEnv()
-
-	err := viper.ReadInConfig()
+	// Load .env file
+	err := godotenv.Load()
 	if err != nil {
-		return config, err
+		fmt.Println("Error loading .env file")
 	}
 
-	err = viper.Unmarshal(&config)
-	return config, err
+	port, err := strconv.Atoi(os.Getenv("PORT"))
+	if err != nil {
+		fmt.Println("Error parsing PORT")
+	}
+
+	return Config{
+		DBHost:            os.Getenv("DB_HOST"),
+		DBPort:            os.Getenv("DB_PORT"),
+		DBUser:            os.Getenv("DB_USER"),
+		DBPassword:        os.Getenv("DB_PASSWORD"),
+		DBName:            os.Getenv("DB_NAME"),
+		JWTSecret:         os.Getenv("JWT_SECRET"),
+		MidtransServerKey: os.Getenv("MIDTRANS_SERVER_KEY"),
+		Env:               os.Getenv("ENV"),
+		Port:              port,
+	}, nil
+
 }

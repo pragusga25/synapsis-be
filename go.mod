@@ -14,6 +14,7 @@ require (
 	github.com/go-playground/validator/v10 v10.22.0 // indirect
 	github.com/golang-jwt/jwt/v5 v5.2.1 // indirect
 	github.com/iancoleman/strcase v0.3.0 // indirect
+	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/midtrans/midtrans-go v1.3.8 // indirect
 	golang.org/x/net v0.23.0 // indirect
