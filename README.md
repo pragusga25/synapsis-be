@@ -57,7 +57,7 @@ go mod tidy
 ### 5. Run the Application
 
 ```bash
-go run main.go
+fresh
 ```
 
 The server should now be running on the port specified in your `.env` file.
@@ -84,9 +84,69 @@ Log in to your Midtrans account and set the notification URL to the public URL p
 https://<ngrok_public_url>/api/transactions
 ```
 
+## Deployment Instructions
+
+To deploy your application using Docker, follow these steps:
+
+### 1. Create Docker Compose Deployment File
+
+Ensure you have a `docker-compose.deploy.yaml` file with the following content:
+
+```yaml
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - '${PORT}:${PORT}'
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - '${DB_PORT}:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
+```
+
+### 2. Deploy with Docker Compose
+
+Run the following command to deploy your application:
+
+```bash
+docker-compose -f docker-compose.deploy.yaml up -d --build
+```
+
+This command will build the Docker image and start the services defined in your deployment file in detached mode.
+
+### 3. Verify the Deployment
+
+Check the status of your containers to ensure they are running correctly:
+
+```bash
+docker-compose -f docker-compose.deploy.yaml ps
+```
+
+Your application should now be running and accessible on the specified port.
+
 ## API Documentation
 
 For detailed API documentation, please refer to the [Postman Documentation](https://documenter.getpostman.com/view/16401831/2sA3duGtTF).
+
+## Entity Diagram
+
+![Entity Diagram](diagram.png)
 
 ## Contributing
 
